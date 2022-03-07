@@ -1,0 +1,43 @@
+﻿@page "/addcategory"
+@inject NavigationManager NavigationManager
+@inject IAddCategoryUseCases AddCategoryUseCases
+<h3>添加 類別 </h3>
+
+@if (category != null)
+{
+    <EditForm Model="category" class="form-inline" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <label for="name">名稱</label>
+            <InputText id="name" @bind-Value="category.Name" class="form-control"></InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="description">敘述</label>
+            <InputText id="description" @bind-Value="category.Description" class="form-control"></InputText>
+        </div>
+
+        <button type="submit" class="btn btn-primary"> 保存 </button>
+        <button type="button" class="btn btn-primary" @onclick="OnCancel">回上頁</button>
+    </EditForm>
+}
+
+
+@code {
+    private Category category;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        category = new Category();
+    }
+    private void OnValidSubmit()
+    {
+        AddCategoryUseCases.Excute(category);
+        NavigationManager.NavigateTo("/categories");
+    }
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/categories");
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/editcategory/{categoryId}"
+@inject NavigationManager NavigationManager
+@inject IAddCategoryUseCases AddCategoryUseCases
+@inject IGetCategoryByIdUseCases GetCategoryByIdUseCases
+@inject IEditCategoryUseCases EditCategoryUseCases
+<h3>編輯 類別 </h3>
+
+@if (category != null)
+{
+    <EditForm Model="category" class="form-inline" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <label for="name">名稱</label>
+            <InputText id="name" @bind-Value="category.Name" class="form-control"></InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="description">敘述</label>
+            <InputText id="description" @bind-Value="category.Description" class="form-control"></InputText>
+        </div>
+
+        <button type="submit" class="btn btn-primary"> 保存 </button>
+        <button type="button" class="btn btn-primary" @onclick="OnCancel">回上頁</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public string CategoryId { get; set; }
+    private Category category;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if(int.TryParse(this.CategoryId , out int icategoryid))
+        {
+            var diffcat = GetCategoryByIdUseCases.Excute(icategoryid);
+            this.category = new Category { CategoryId = diffcat.CategoryId, Name = diffcat.Name, Description = diffcat.Description };
+        }
+
+    }
+    private void OnValidSubmit()
+    {
+        EditCategoryUseCases.Execute(this.category);
+        NavigationManager.NavigateTo("/categories");
+    }
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/categories");
+    }
+}
