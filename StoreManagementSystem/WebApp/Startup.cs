@@ -46,12 +46,19 @@ namespace WebApp
 
             //相依注入 --> 記憶體 DATA STORE 
             services.AddScoped<ICategoryRepository, CategoryInMemoryRepository>();
-            //相依注入 --> Use Cases & Repositories
+            services.AddScoped<IProductRepository, ProductInMemoryRepository>();
+            
+            //相依注入 --> Use Cases & Repositories   --Category--
             services.AddTransient<IViewCategoriesUseCase, ViewCategoriesUseCase>();
             services.AddTransient<IAddCategoryUseCases, AddCategoryUseCases>();
             services.AddTransient<IEditCategoryUseCases, EditCategoryUseCases>();
             services.AddTransient<IGetCategoryByIdUseCases, GetCategoryByIdUseCases >();
             services.AddTransient<IDeleteCategoryUseCases, DeleteCategoryUseCases>();
+
+            //相依注入 --> Use Cases & Repositories   --Product--
+            services.AddTransient<IViewProductsUseCases, ViewProductsUseCases>();
+            services.AddTransient<IAddProductUseCases, AddProductUseCases>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,7 +5,7 @@
 
 @if (category != null)
 {
-    <EditForm Model="category" class="form-inline" OnValidSubmit="OnValidSubmit">
+    <EditForm Model="category" class="form" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary></ValidationSummary>
         <div class="form-group">
@@ -17,9 +17,10 @@
             <label for="description">敘述</label>
             <InputText id="description" @bind-Value="category.Description" class="form-control"></InputText>
         </div>
-
-        <button type="submit" class="btn btn-primary"> 保存 </button>
-        <button type="button" class="btn btn-primary" @onclick="OnCancel">回上頁</button>
+        <div style="float:right">
+            <button type="submit" class="btn btn-primary"> 保存 </button>
+            <button type="button" class="btn btn-primary" @onclick="OnCancel">回上頁</button>
+        </div>
     </EditForm>
 }
 
