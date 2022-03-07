@@ -14,7 +14,7 @@ namespace Plugins.DataStore.InMemory
 
         public ProductInMemoryRepository()
         {
-            //添加測試用 商品Category
+            //添加測試用 商品Product
             products = new List<Product>()
             {
                 new Product{ ProductId=1,CategoryId = 1 , Name="黑松茶花綠茶",Quantity=100,Price= 20},
@@ -40,11 +40,27 @@ namespace Plugins.DataStore.InMemory
             }
             products.Add(product);
         }
+        public void UpdateProduct(Product product)
+        {
+            var productToUpdate = products?.FirstOrDefault(x => x.ProductId == product.ProductId);
+            if (productToUpdate != null)
+            {//new Product{ ProductId=1,CategoryId = 1 , Name="黑松茶花綠茶",Quantity=100,Price= 20},
+                productToUpdate.CategoryId= product.CategoryId;
+                productToUpdate.Name = product.Name;
+                productToUpdate.Quantity = product.Quantity;
+                productToUpdate.Price = product.Price;
 
-
-
-
-
+            }
+        }
+        public Product GetProductById(int productId)
+        {
+            return products.FirstOrDefault(x => x.ProductId == productId);
+            
+        }
+        public void DeleteProduct(int ProductId)
+        {
+            products?.Remove(GetProductById(ProductId));
+        }
         public IEnumerable<Product> GetProducts()
         {
             return products;

@@ -58,7 +58,11 @@ namespace WebApp
             //¬Û¨Ìª`¤J --> Use Cases & Repositories   --Product--
             services.AddTransient<IViewProductsUseCases, ViewProductsUseCases>();
             services.AddTransient<IAddProductUseCases, AddProductUseCases>();
-            
+            services.AddTransient<IEditProductUseCases, EditProductUseCases>();
+            services.AddTransient<IGetProductByIdUseCases, GetProductByIdUseCases>();
+            services.AddTransient<IDeleteProductUseCases, DeleteProductUseCases>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
