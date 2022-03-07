@@ -1,7 +1,8 @@
 ﻿@page "/categories"
-@inject NavigationManager navigation
+
 @inject NavigationManager NavigationManager
 @inject IViewCategoriesUseCase ViewCategoriesUseCase
+@inject IDeleteCategoryUseCases DeleteCategoryUseCases
 
 <div style="vertical-align: middle; padding-right: 15px; padding-left: 15px;">
     <h3 style="display: inline">類別清單</h3>
@@ -24,7 +25,10 @@
                 <tr>
                     <td style="vertical-align: middle;">@category.Name</td>
                     <td style="vertical-align: middle;">@category.Description</td>
-                    <td style="vertical-align: middle;"><button type="button" @onclick="@(() =>EeditCategory(category))" class="btn btn-link">修改</button></td>
+                    <td style="vertical-align: middle;">
+                        <button type="button" @onclick="@(() =>EeditCategory(category))" class="btn btn-link">修改</button>
+                        <button type="button" @onclick="@(() =>DeleteCategory(category.CategoryId))" class="btn btn-link">刪除</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -38,7 +42,8 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        categories = ViewCategoriesUseCase.Excute().ToList();
+        LoadCategories();
+        //categories = ViewCategoriesUseCase.Excute().ToList();
     }
     private void onClickAddCategory()
     {
@@ -48,5 +53,13 @@
     {
         NavigationManager.NavigateTo($"/editcategory/{category.CategoryId}");
     }
-
+    private void DeleteCategory(int categoryId)
+    {
+        DeleteCategoryUseCases.Delete(categoryId);
+        LoadCategories();
+    }
+    private void LoadCategories()
+    {
+        categories = ViewCategoriesUseCase.Excute().ToList();
+    }
 }
