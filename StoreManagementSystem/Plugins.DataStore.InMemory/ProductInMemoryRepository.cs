@@ -23,6 +23,7 @@ namespace Plugins.DataStore.InMemory
                 new Product{ ProductId=4,CategoryId = 3 , Name="泰山礦泉水650ml",Quantity=80,Price= 9}
             };
         }
+        #region CRUD 商品
         public void AddProduct(Product product)
         {
             //略同Category
@@ -65,5 +66,12 @@ namespace Plugins.DataStore.InMemory
         {
             return products;
         }
+        #endregion
+
+        public IEnumerable<Product> GetProductsByCategoryId(int categoryId)
+        {
+            return products.Where(x => x.CategoryId == categoryId);
+        }
+
     }
 }

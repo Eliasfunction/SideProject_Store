@@ -1,0 +1,78 @@
+﻿@inject NavigationManager NavigationManager
+@inject IViewCategoriesUseCase ViewCategoriesUseCase
+@inject IViewProductByCategoryId ViewProductByCategoryId
+
+<div class="form-group">
+    <label for="category">種類</label>
+    <select class="custom-select" id="category" @bind="SelectedCategoryId">
+        <option selected></option>
+        @foreach (var cat in categories)
+        {
+            <option value="@cat.CategoryId">@cat.Name</option>
+        }
+    </select>
+</div>
+
+
+@if (productsInCategory != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>商品名稱</th>
+                <th>數量</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pdt in productsInCategory)
+            {
+            <tr @onclick="@(() => OnSelectProduct(pdt))"
+                style=" @(pdt.ProductId ==selectedProductId?"background-color:#00E6E6; cursor:pointer;":"cursor:pointer;"
+                   )">
+                <td>@pdt.Name</td>
+                <td>@pdt.Quantity</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Product> productsInCategory;
+    private int selectedProductId;
+
+    [Parameter]
+    public EventCallback<Product> OnProductSelected{get; set;}
+
+    private int selectedCategoryId;
+    private int SelectedCategoryId
+    {
+        get
+        {
+            return selectedCategoryId;
+        }
+        set
+        {
+            //Value 一定要先Value
+            selectedCategoryId = value;
+            productsInCategory = ViewProductByCategoryId.Execute(value);
+            OnSelectProduct(null);
+            StateHasChanged();
+        }
+    }
+    private IEnumerable<Category> categories;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        categories = ViewCategoriesUseCase.Excute();
+    }
+
+    private void OnSelectProduct(Product ptd)
+    {
+        //InvokeAsync 避免塞車
+        OnProductSelected.InvokeAsync(ptd);
+
+        if (ptd !=null) selectedProductId = ptd.ProductId;
+    }
+}

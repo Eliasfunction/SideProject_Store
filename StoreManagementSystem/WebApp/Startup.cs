@@ -47,21 +47,24 @@ namespace WebApp
             //相依注入 --> 記憶體 DATA STORE 
             services.AddScoped<ICategoryRepository, CategoryInMemoryRepository>();
             services.AddScoped<IProductRepository, ProductInMemoryRepository>();
-            
-            //相依注入 --> Use Cases & Repositories   --Category--
+
+            //Use Cases & Repositories
+            //相依注入 --> --Category--
             services.AddTransient<IViewCategoriesUseCase, ViewCategoriesUseCase>();
             services.AddTransient<IAddCategoryUseCases, AddCategoryUseCases>();
             services.AddTransient<IEditCategoryUseCases, EditCategoryUseCases>();
             services.AddTransient<IGetCategoryByIdUseCases, GetCategoryByIdUseCases >();
             services.AddTransient<IDeleteCategoryUseCases, DeleteCategoryUseCases>();
 
-            //相依注入 --> Use Cases & Repositories   --Product--
+            //相依注入 --> --Product--
             services.AddTransient<IViewProductsUseCases, ViewProductsUseCases>();
             services.AddTransient<IAddProductUseCases, AddProductUseCases>();
             services.AddTransient<IEditProductUseCases, EditProductUseCases>();
             services.AddTransient<IGetProductByIdUseCases, GetProductByIdUseCases>();
             services.AddTransient<IDeleteProductUseCases, DeleteProductUseCases>();
-
+            //相依注入 -->  --收銀台--
+            services.AddTransient<IViewProductByCategoryId, ViewProductByCategoryId>();
+            services.AddTransient<ISellUseCases, SellUseCases > ();
 
         }
 

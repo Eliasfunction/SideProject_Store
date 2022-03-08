@@ -1,0 +1,76 @@
+﻿@inject IGetProductByIdUseCases GetProductByIdUseCases
+@inject ISellUseCases SellUseCases
+
+@if (productToSell != null)
+{
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+    <EditForm Model="productToSell" OnValidSubmit="SellProduct">
+        <DataAnnotationsValidator></DataAnnotationsValidator><!--資料驗證-->
+        <ValidationSummary></ValidationSummary> <!--表單違規訊息-->
+
+        <div>
+            <label for="name">產品名稱</label>
+            <input id="name " type="text" readonly value="@productToSell.Name" class="form-control" />
+        </div>
+        <div>
+            <label for="price">價格</label>
+            <input id="price" type="text" readonly value="@(string.Format("{0:c}",productToSell.Price))" class="form-control" />
+        </div>
+        <div>
+            <label for="qt">數量</label>
+            <InputNumber id="qt" @bind-Value="@productToSell.Quantity" class="form-control"></InputNumber>
+        </div>
+        <button type="submit" class="btn btn-primary">賣出</button>
+    </EditForm>
+    <br />
+}
+
+@code {
+    private Product productToSell;
+    private string errorMessage;
+    [Parameter]
+    public Product SelectedProduct { get; set; }
+    [Parameter]
+    public EventCallback<Product> OnProductSold { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (SelectedProduct != null)
+        {
+            productToSell = new Product
+            {
+                ProductId = SelectedProduct.ProductId,
+                CategoryId = SelectedProduct.CategoryId,
+                Name = SelectedProduct.Name,
+                Price = SelectedProduct.Price,
+                Quantity = 0
+            };
+        }
+        else
+        {
+            productToSell = null;
+        }
+    }
+    private void SellProduct()
+    {
+        var product = GetProductByIdUseCases.Excute(productToSell.ProductId);
+        if (productToSell.Quantity <= 0)
+        {
+            errorMessage = "數量需要大於0";
+        }
+        else if (product.Quantity >= productToSell.Quantity)
+        {
+            OnProductSold.InvokeAsync(productToSell);
+            errorMessage = string.Empty;
+            SellUseCases.Execute(productToSell.ProductId, productToSell.Quantity.Value);
+        }
+        else
+        {
+            errorMessage = $"{product.Name}庫存{product.Quantity} 請再次確認";
+        }
+    }
+}
