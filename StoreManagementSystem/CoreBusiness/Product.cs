@@ -18,5 +18,12 @@ namespace CoreBusiness
         public int? Quantity { get; set; }
         [Required]
         public double? Price { get; set; }
+
+
+
+        //EF core 導航
+        public Category Category{ get; set; }
+
+
     }
 }

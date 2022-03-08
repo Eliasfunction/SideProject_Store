@@ -13,6 +13,8 @@ using WebApp.Data;
 using Plugins.DataStore.InMemory;
 using UseCases.DataStorePluginInterfaces;
 using UseCases;
+using Microsoft.EntityFrameworkCore;
+using Plugins.DataStore.SQL;
 
 namespace WebApp
 {
@@ -32,6 +34,13 @@ namespace WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
+            //資料庫連線
+            services.AddDbContext<MarketContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
 
             #region 相依注入Singleton,Scoped,Transient 說明
             /*

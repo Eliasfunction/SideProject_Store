@@ -15,5 +15,11 @@ namespace CoreBusiness
         public string Description { get; set; }
 
 
+
+
+        //EF core 導航
+        public List<Product> Products { get; set; }
+
+
     }
 }
