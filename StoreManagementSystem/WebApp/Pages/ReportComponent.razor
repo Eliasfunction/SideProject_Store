@@ -1,0 +1,106 @@
+﻿@page "/report"
+
+@inject IJSRuntime JSRuntime
+@inject IGetTransactionUseCases GetTransactionUseCases
+
+<div id="printarea">
+    <div class="row">
+        <div class="col-2">
+            <label for="cashier">出貨人</label>
+            <input type="text" id="=cashier" class="form-control" @bind-value="cashierName" />
+        </div>
+        <div class="col-3">
+            <label for="startTime">開始時間</label>
+            <input type="date" id="=startTime" class="form-control" @bind-value="startTime" />
+        </div>
+        <div class="col-3">
+            <label for="endTime">結束時間</label>
+            <input type="date" id="=endTime" class="form-control" @bind-value="endTime" />
+        </div>
+        <div class="col-2">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" @onclick="LoadTransactions">搜尋</button>
+        </div>
+        <div class="col-2">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-primary form-control" @onclick="Print">列印</button>
+        </div>
+
+    </div>
+    <br />
+    @if (trans != null)
+    {
+ 
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>收銀員</th>
+                        <th>商品名稱</th>
+                        <th>在庫量</th>
+                        <th>出庫量</th>
+                        <th>剩餘量</th>
+                        <th>單價</th>
+                        <th>價格</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var tran in trans)
+                    {
+                        <tr>
+                            <td>@tran.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td>@tran.CashierName</td>
+                            <td>@tran.ProductName</td>
+                            <td>@tran.Beforeqt</td>
+                            <td>@tran.Soldqt</td>
+                            <td>@(tran.Beforeqt - tran.Soldqt)</td>
+                            <td style="text-align:right">@(string.Format("{0:c}",  tran.Price))</td>
+                            <td style="text-align:right">@(string.Format("{0:c}", tran.Soldqt * tran.Price))</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">&nbsp;</td>
+                        <td style="text-align:right">
+                            <b>
+                                總共:
+                            </b>
+                        </td>
+                        <td style="text-align:right">
+                            <b>
+                                @(string.Format("{0:c}", trans.Sum(x => x.Price * x.Soldqt)))
+                            </b>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+
+    }
+</div>
+@code {
+    private string cashierName;
+    private DateTime startTime;
+    private DateTime endTime;
+    private IEnumerable<Transaction> trans;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        startTime = DateTime.Today;
+        endTime = DateTime.Today;
+    }
+
+    private void LoadTransactions()
+    {
+        trans = GetTransactionUseCases.Execute(cashierName, startTime, endTime);
+    }
+
+    public void Print()
+    {
+        JSRuntime.InvokeVoidAsync("print");
+    }
+
+}
