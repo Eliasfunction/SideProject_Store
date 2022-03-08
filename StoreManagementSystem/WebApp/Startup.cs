@@ -54,13 +54,19 @@ namespace WebApp
             #endregion
 
             //相依注入 --> 記憶體 DATA
+            /*
             services.AddScoped<ICategoryRepository, CategoryInMemoryRepository>();
             services.AddScoped<IProductRepository, ProductInMemoryRepository>();
-            services.AddScoped<ITransactionRepository, TransactionInMemoryRepository>();
+            services.AddScoped<ITransactionRepository, TransactionInMemoryRepository>();*/
 
-            //Use Cases & Repositories
-            //相依注入 --> --Category--
-            services.AddTransient<IViewCategoriesUseCase, ViewCategoriesUseCase>();
+            //相依注入 --> 資料庫 EF DATA store sql server
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>(); 
+
+             //Use Cases & Repositories
+             //相依注入 --> --Category--
+             services.AddTransient<IViewCategoriesUseCase, ViewCategoriesUseCase>();
             services.AddTransient<IAddCategoryUseCases, AddCategoryUseCases>();
             services.AddTransient<IEditCategoryUseCases, EditCategoryUseCases>();
             services.AddTransient<IGetCategoryByIdUseCases, GetCategoryByIdUseCases >();
