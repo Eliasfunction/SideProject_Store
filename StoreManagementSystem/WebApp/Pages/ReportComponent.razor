@@ -1,5 +1,7 @@
 ﻿@page "/report"
 
+@attribute [Authorize(Policy = "AdminOnly")]
+
 @inject IJSRuntime JSRuntime
 @inject IGetTransactionUseCases GetTransactionUseCases
 
@@ -30,52 +32,52 @@
     <br />
     @if (trans != null)
     {
- 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>時間</th>
-                        <th>收銀員</th>
-                        <th>商品名稱</th>
-                        <th>在庫量</th>
-                        <th>出庫量</th>
-                        <th>剩餘量</th>
-                        <th>單價</th>
-                        <th>價格</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-                    @foreach (var tran in trans)
-                    {
-                        <tr>
-                            <td>@tran.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                            <td>@tran.CashierName</td>
-                            <td>@tran.ProductName</td>
-                            <td>@tran.Beforeqt</td>
-                            <td>@tran.Soldqt</td>
-                            <td>@(tran.Beforeqt - tran.Soldqt)</td>
-                            <td style="text-align:right">@(string.Format("{0:c}",  tran.Price))</td>
-                            <td style="text-align:right">@(string.Format("{0:c}", tran.Soldqt * tran.Price))</td>
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>收銀員</th>
+                    <th>商品名稱</th>
+                    <th>在庫量</th>
+                    <th>出庫量</th>
+                    <th>剩餘量</th>
+                    <th>單價</th>
+                    <th>價格</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var tran in trans)
+                {
                     <tr>
-                        <td colspan="6">&nbsp;</td>
-                        <td style="text-align:right">
-                            <b>
-                                總共:
-                            </b>
-                        </td>
-                        <td style="text-align:right">
-                            <b>
-                                @(string.Format("{0:c}", trans.Sum(x => x.Price * x.Soldqt)))
-                            </b>
-                        </td>
+                        <td>@tran.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@tran.CashierName</td>
+                        <td>@tran.ProductName</td>
+                        <td>@tran.Beforeqt</td>
+                        <td>@tran.Soldqt</td>
+                        <td>@(tran.Beforeqt - tran.Soldqt)</td>
+                        <td style="text-align:right">@(string.Format("{0:c}",  tran.Price))</td>
+                        <td style="text-align:right">@(string.Format("{0:c}", tran.Soldqt * tran.Price))</td>
                     </tr>
-                </tfoot>
-            </table>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                    <td style="text-align:right">
+                        <b>
+                            總共:
+                        </b>
+                    </td>
+                    <td style="text-align:right">
+                        <b>
+                            @(string.Format("{0:c}", trans.Sum(x => x.Price * x.Soldqt)))
+                        </b>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
 
 
     }

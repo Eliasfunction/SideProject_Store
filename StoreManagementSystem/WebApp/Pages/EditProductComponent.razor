@@ -1,5 +1,7 @@
 ﻿@page "/editproduct/{productId}"
 
+@attribute [Authorize(Policy = "AdminOnly")]
+
 @inject NavigationManager NavigationManager
 @inject IAddProductUseCases AddProductUseCases
 @inject IGetProductByIdUseCases GetProductByIdUseCases
@@ -59,7 +61,8 @@
         if (int.TryParse(this.ProductId, out int iproductid))
         {
             var diffpdt = GetProductByIdUseCases.Excute(iproductid);
-            this.product = new Product {
+            this.product = new Product
+            {
                 ProductId = diffpdt.ProductId,
                 CategoryId = diffpdt.CategoryId,
                 Name = diffpdt.Name,

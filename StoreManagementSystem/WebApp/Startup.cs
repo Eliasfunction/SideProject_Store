@@ -40,7 +40,11 @@ namespace WebApp
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("AdminOnly", p => p.RequireClaim("Position", "Admin"));
+                option.AddPolicy("CashierOnly", p => p.RequireClaim("Position", "Cashier"));
+            });
 
             #region 相依注入Singleton,Scoped,Transient 說明
             /*
@@ -108,9 +112,13 @@ namespace WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
+            //登入
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

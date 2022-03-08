@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoreBusiness;
+using Microsoft.EntityFrameworkCore;
 using UseCases.DataStorePluginInterfaces;
 
 namespace Plugins.DataStore.SQL
@@ -28,7 +29,7 @@ namespace Plugins.DataStore.SQL
                 return db.Transactions.Where(x => x.TimeStamp.Date == date.Date);
             else
                 return db.Transactions.Where(x =>
-                x.CashierName.ToLower()==cashierName.ToLower() &&
+                EF.Functions.Like(x.CashierName, $"%{cashierName}%") &&
                 x.TimeStamp.Date == date.Date
                 );
         }
@@ -55,7 +56,8 @@ namespace Plugins.DataStore.SQL
                 return db.Transactions.Where(x => x.TimeStamp.Date >= startDate && x.TimeStamp <= endDate.AddDays(1).Date);
             else
                 return db.Transactions.Where(x =>
-                x.CashierName.ToLower() == cashierName.ToLower() &&
+                
+                EF.Functions.Like( x.CashierName, $"%{cashierName}%") &&
                 x.TimeStamp.Date >= startDate && x.TimeStamp <= endDate.AddDays(1).Date
                 );
         }
