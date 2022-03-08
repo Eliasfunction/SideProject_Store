@@ -31,6 +31,10 @@
 @code {
     private Product productToSell;
     private string errorMessage;
+
+    [Parameter]
+    public string CashierName { get; set; }
+
     [Parameter]
     public Product SelectedProduct { get; set; }
     [Parameter]
@@ -57,6 +61,11 @@
     }
     private void SellProduct()
     {
+        if (string.IsNullOrEmpty(CashierName))
+        {
+            errorMessage = "請輸入收銀員名字";
+            return;
+        }
         var product = GetProductByIdUseCases.Excute(productToSell.ProductId);
         if (productToSell.Quantity <= 0)
         {
@@ -66,7 +75,7 @@
         {
             OnProductSold.InvokeAsync(productToSell);
             errorMessage = string.Empty;
-            SellUseCases.Execute(productToSell.ProductId, productToSell.Quantity.Value);
+            SellUseCases.Execute(CashierName, productToSell.ProductId, productToSell.Quantity.Value);
         }
         else
         {

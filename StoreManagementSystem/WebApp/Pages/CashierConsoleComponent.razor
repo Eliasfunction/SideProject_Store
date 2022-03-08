@@ -1,28 +1,60 @@
 ﻿@page "/cashier_console"
 
+<div class="row">
+    <div class="col-8"><h3>收銀台</h3></div>
+    <div class="col-1"> <label for="cashier">收銀員</label></div>
+    <div class="col-3">
+        <div class="form-group">
 
-<h3>收銀台</h3>
+            <input type="text" id="cashier" class="form-control" @bind-value="cashierName" />
+        </div>
+    </div>
+</div>
+
+
 <br />
 <div class="row">
     <div class="col-4">
+
         <CashierComponent OnProductSelected="SelectProduct"></CashierComponent>
-        <SellComponent SelectedProduct="selectedProduct" OnProductSold="SellProduct"></SellComponent>
+        <SellComponent 
+                       CashierName="@cashierName" 
+                       SelectedProduct="selectedProduct" 
+                       OnProductSold="SellProduct"></SellComponent>
     </div>
     <div class="col-8">
-        
+        <TodayTranscationsComponent @ref="transationComponent"></TodayTranscationsComponent>
     </div>
 </div>
 
 
 
 @code {
+    private TodayTranscationsComponent transationComponent;
     private Product selectedProduct;
+    private string cashierName;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    //初始化後載入
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            transationComponent.LoadTransactions(cashierName);
+        }
+    }
+
     private void SelectProduct(Product product)
     {
         selectedProduct = product;
     }
     private void SellProduct(Product product)
     {
-
+        transationComponent.LoadTransactions(cashierName);
     }
 }

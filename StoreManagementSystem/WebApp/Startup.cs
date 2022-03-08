@@ -44,9 +44,10 @@ namespace WebApp
              */
             #endregion
 
-            //相依注入 --> 記憶體 DATA STORE 
+            //相依注入 --> 記憶體 DATA
             services.AddScoped<ICategoryRepository, CategoryInMemoryRepository>();
             services.AddScoped<IProductRepository, ProductInMemoryRepository>();
+            services.AddScoped<ITransactionRepository, TransactionInMemoryRepository>();
 
             //Use Cases & Repositories
             //相依注入 --> --Category--
@@ -65,6 +66,11 @@ namespace WebApp
             //相依注入 -->  --收銀台--
             services.AddTransient<IViewProductByCategoryId, ViewProductByCategoryId>();
             services.AddTransient<ISellUseCases, SellUseCases > ();
+            services.AddTransient<ITransactionRecordUseCases, TransactionRecordUseCases>();
+            services.AddTransient<IGetTodayTransactionUseCases, GetTodayTransactionUseCases>();
+
+
+
 
         }
 
